@@ -11,33 +11,14 @@ namespace DeviceInputEventDemo
     public class DeviceEventTransformer
     {
         private readonly FrameworkElement _element;
-        /// <summary>
-        /// 是否需要支持触摸事件（触摸面积以及多指触摸捕获）
-        /// <para>触摸面积是Touch事件返回的，业务大部分场景用不到,可以用Stylus事件满足绝大部分场景。</para>
-        /// <para>使用Touch事件的某些业务使用成本略高，比如焦点捕获，Touch一定要使用CaptureTouch;
-        /// 并且不支持已捕获焦点的元素A不ReleaseTouchCapture的情况下，再对另一元素B进行CaptureTouch</para>
-        /// <para>所以默认True封装Mouse、Stylus、Touch事件，False则关闭Touch事件（不支持触摸面积及多指焦点捕获等）</para>
-        /// </summary>
-        private readonly bool _supportTouchEvent;
 
         /// <summary>
         /// 提供<see cref="DeviceEventTransformer"/>类实例的初始化
         /// </summary>
         /// <param name="element"></param>
-        public DeviceEventTransformer(FrameworkElement element) : this(element, true)
+        public DeviceEventTransformer(FrameworkElement element)
         {
             _element = element;
-        }
-
-        /// <summary>
-        /// 提供<see cref="DeviceEventTransformer"/>类实例的初始化
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="supportTouchEvent">是否需要支持触摸事件。默认True封装Mouse、Stylus、Touch事件，False则关闭Touch事件（不支持触摸面积及多指焦点捕获等）</param>
-        public DeviceEventTransformer(FrameworkElement element, bool supportTouchEvent)
-        {
-            _element = element;
-            _supportTouchEvent = supportTouchEvent;
         }
 
         #region 订阅/取消
@@ -51,11 +32,7 @@ namespace DeviceInputEventDemo
         {
             RegisterMouse();
             RegisterStylus();
-            //是否需要触摸面积
-            if (_supportTouchEvent)
-            {
-                RegisterTouch();
-            }
+            RegisterTouch();
         }
 
         private void RegisterTouch()
@@ -123,11 +100,7 @@ namespace DeviceInputEventDemo
         {
             UnRegisterMouse();
             UnRegisterStylus();
-            //是否需要触摸面积
-            if (_supportTouchEvent)
-            {
-                UnRegisterTouch();
-            }
+            UnRegisterTouch();
         }
 
         private void UnRegisterTouch()
@@ -211,8 +184,7 @@ namespace DeviceInputEventDemo
         private void Element_PreviewStylusUp(object sender, StylusEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent &&
-                e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
             }
@@ -221,8 +193,7 @@ namespace DeviceInputEventDemo
         private void Element_PreviewStylusMove(object sender, StylusEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent &&
-                e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
             }
@@ -232,8 +203,7 @@ namespace DeviceInputEventDemo
         private void Element_PreviewStylusDown(object sender, StylusDownEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent &&
-                e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
             }
@@ -335,8 +305,7 @@ namespace DeviceInputEventDemo
         private void Element_StylusUp(object sender, StylusEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent&&
-                e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
             }
@@ -350,8 +319,7 @@ namespace DeviceInputEventDemo
         private void Element_StylusMove(object sender, StylusEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent &&
-                e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
             }
@@ -365,7 +333,7 @@ namespace DeviceInputEventDemo
         private void Element_StylusDown(object sender, StylusEventArgs e)
         {
             //如果支持触摸事件，则对Stylus事件内的触摸输入数据屏蔽掉。
-            if (_supportTouchEvent &&
+            if (
                 e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus)
             {
                 return;
